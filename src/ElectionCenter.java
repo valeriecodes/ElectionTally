@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class ElectionCenter {
-	HashMap<String, Tally> stateTallies;
-	HashMap<String, Integer> electoralVotes;
+	private TallySet stateTallies;
+	private HashMap<String, Integer> electoralVotes;
 	
 	public ElectionCenter(String voteFile){
+		electoralVotes = new HashMap<String, Integer>();
 		BufferedReader fileStream = null;
 		try {
 			fileStream = new BufferedReader(new FileReader(voteFile));
@@ -31,5 +32,12 @@ public class ElectionCenter {
 			System.exit(1);
 			
 		}
+	}
+	
+	public TallySet getTallies(){
+		return stateTallies;
+	}
+	public HashMap<String, Integer> getElectoralVotes(){
+		return electoralVotes;
 	}
 }
