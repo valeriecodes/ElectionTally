@@ -1,10 +1,11 @@
-import org.hsqldb.lib.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Tally implements TallyStrategy, WinnerStrategy {
-	HashMap<String, int> totals;
+public class Tally implements WinnerStrategy {
+	HashMap<String, Integer> totals;
 	
 	public Tally(){
-		totals = new Hashmap();
+		totals = new HashMap<String, Integer>();
 	}
 	
 	public void tally(String candidate, int voteCount){
@@ -16,12 +17,18 @@ public class Tally implements TallyStrategy, WinnerStrategy {
 		}
 	}
 	
+	public MyIterator<Map.Entry<String, Integer>> iterator(){
+		@SuppressWarnings("unchecked")
+		Map.Entry<String, Integer> [] contents = (Map.Entry<String, Integer>[]) totals.entrySet().toArray();
+		return new MyIterator<Map.Entry<String, Integer>>(contents);
+	}
+
 	public int voteCount(){
-		Collection <int> votes = totals.values();
-		Iterator votesIter = votes.iterator();
+		MyIterator<Map.Entry<String, Integer>> votesIter = this.iterator();
 		int total = 0;
 		while(votesIter.hasNext()){
-			total += votesIter.next();
+			Map.Entry<String, Integer> currentCandidate = votesIter.next();
+			total += currentCandidate.getValue();
 		}
 		return total;
 	}
@@ -30,16 +37,18 @@ public class Tally implements TallyStrategy, WinnerStrategy {
 		return totals.get(candidate);
 	}
 	
-	public String pickWinner(Iterator<String> candidates){
-		String currentWinner;
+	public String pickWinner(){
+		String currentWinner =  null;
 		int currentWinnerVotes = 0;
+		MyIterator<Map.Entry<String, Integer>> candidates = this.iterator(); 
 		while(candidates.hasNext()){
-			currentCandidate = candidates.next();
-			currentVotes = votesFor(currentCandidate);
+			Map.Entry<String, Integer> currentCandidate = candidates.next();
+			int currentVotes = votesFor(currentCandidate.getKey());
 			if (currentVotes > currentWinnerVotes){
-				currentWinner = currentCandidate;
+				currentWinner = currentCandidate.getKey();
 				currentWinnerVotes = currentVotes;
 			}
 		}
+		return currentWinner;
 	}
 }

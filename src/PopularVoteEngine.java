@@ -1,22 +1,19 @@
 import java.util.HashMap;
 
 
-public class PopularVoteEngine implements WinnerStrategy, TallyStrategy{
+public class PopularVoteEngine implements WinnerStrategy {
 	HashMap<String, Integer> totalCounts;
+	TallySet tallies;
 	public PopularVoteEngine(){
-		totalCounts = new HashMap();
-	}
-	public String pickWinner(Iterator tallies){
-		totalCounts.clear();
-		String winner;
-		while(tallies.hasNext()){
-			Tally currentTally = tallies.next();
-			Iterator current = currentTally.iterator();
-		}
+		totalCounts = new HashMap<String, Integer>();
 	}
 	
-	public void tally(String candidate, int voteCount) {
-		// TODO Auto-generated method stub
-		
+	public String pickWinner(){
+		totalCounts.clear();
+		return "WINNER";
+		//while(talliesIter.hasNext()){
+		//	Tally currentTally = (Tally) tallies.next();
+		//	MyIterator current = currentTally.iterator();
+		//}
 	}
 }
