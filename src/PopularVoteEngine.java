@@ -1,24 +1,56 @@
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class PopularVoteEngine implements WinnerStrategy {
-	HashMap<String, Integer> totals;
+	CandidateTally totals;
 	TallySet tallies;
-	ElectionCenter center;
-	public PopularVoteEngine(ElectionCenter myEC){
-		center = myEC;
-		totals = new HashMap<String, Integer>();
+	Election election;
+	public PopularVoteEngine(Election myElection){
+		election = myElection;
+		totals = null;
 	}
 	
 	public String pickWinner(){
-		totals.clear();
-		MyIterator<Tally> talliesIter = center.getTallies().iterator();
+		if (totals == null){
+			this.voteBreakdown();
+		}
 		String winner = null;
-		int winnerVoteCout = 0;
-		while(talliesIter.hasNext()){
-			Tally currentTally = talliesIter.next();
-			//TODO: Finish this. 
+		int winnerVoteCount = 0;
+		MyIterator<Map.Entry<String, Integer>> iter = totals.iterator();
+		while(iter.hasNext()){
+			Map.Entry<String, Integer> candidateInfo = iter.next();
+			String candidate = candidateInfo.getKey();
+			int voteCount = candidateInfo.getValue();
+			if(voteCount > winnerVoteCount){
+				winner = candidate;
+				winnerVoteCount = voteCount;
+			}
 		}
 		return winner;
+	}
+	
+	public CandidateTally voteBreakdown(){
+		if(totals != null){
+			totals.reset();
+		} else {
+			totals = new CandidateTally();
+		}
+		MyIterator<Tally> talliesIter = election.getTallies().iterator();
+		while (talliesIter.hasNext()){
+			Tally currentTally = talliesIter.next();
+			MyIterator<Map.Entry<String, Integer>> voteIter = currentTally.iterator();
+			while (voteIter.hasNext()){
+				Map.Entry<String, Integer> candidateInfo = voteIter.next();
+				String candidate = candidateInfo.getKey();
+				int voteCount = candidateInfo.getValue();
+				if (totals.candidateExists(candidate)){
+					totals.addCandidateVotes(candidate, voteCount);
+				} else {
+					totals.addCandidate(candidate, voteCount);
+				}
+			}
+		}
+		return totals;
 	}
 }

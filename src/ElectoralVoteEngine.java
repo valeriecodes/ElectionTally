@@ -1,53 +1,54 @@
-import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ElectoralVoteEngine implements WinnerStrategy{
 	int threshold;
-	HashMap<String, Integer> electoralVotes;
-	HashMap<String, Integer> totals;
-	ElectionCenter center;
+	ElectoralTally electoralVotes;
+	CandidateTally totals;
+	Election election;
 	
-	public ElectoralVoteEngine(ElectionCenter myEC){
-		center = myEC;
-		electoralVotes = center.getElectoralVotes();
-		totals = new HashMap<String, Integer>();
-		int stateCount = electoralVotes.size();
-		Integer [] voteValues = electoralVotes.values()
-				.toArray(new Integer[stateCount]); 
-		int totalVotes = 0;
-		for (int i = 0; i < stateCount; i++){
-			totalVotes += voteValues[i];
-		}
-		float halfVotes = (float) totalVotes/2;
-		if (halfVotes % 1 == 0){
-			threshold = (int) halfVotes;
-		} else {
-			threshold = (int) halfVotes + 1;
-		}
+	public ElectoralVoteEngine(Election myElection){
+		election = myElection;
+		electoralVotes = election.getElectoralVotes();
+		totals = null;
 	}
 	
 	public String pickWinner(){
-		totals.clear();
-		TallySet tallies = center.getTallies();
-		String [] states = electoralVotes.keySet()
-				.toArray(new String[electoralVotes.size()]);
-		for (int i = 0; i < states.length; i ++){
-			String currentState = states[i];
-			String stateWinner = tallies.winnerOf(currentState);
-			if (totals.containsKey(stateWinner)){
-				int currentCount = totals.get(stateWinner);
-				int stateElectoralVotes = electoralVotes.get(currentState);
-				totals.put(stateWinner, currentCount + stateElectoralVotes);
-			}
+		if (totals == null){
+			this.voteBreakdown();
 		}
 		String winner = null;
-		String [] candidates = electoralVotes.keySet()
-				.toArray(new String[totals.size()]);
-		for (int i = 0; i < candidates.length; i++){
-			String currentCandidate = candidates[i];
-			if (totals.get(currentCandidate) >= threshold){
-				winner = currentCandidate;
+		MyIterator<Entry<String, Integer>> iter = totals.iterator();
+		boolean toContinue = iter.hasNext();
+		while(toContinue){
+			Map.Entry<String, Integer> candidateInfo = iter.next();
+			if (candidateInfo.getValue() >= electoralVotes.getThreshold()){
+				winner = candidateInfo.getKey();
+				toContinue = false;
+			} else {
+				toContinue = iter.hasNext();
 			}
 		}
 		return winner;
+	}
+	
+	public CandidateTally voteBreakdown(){
+		if(totals != null){
+			totals.reset();
+		} else {
+			totals = new CandidateTally();
+		}
+		TallySet tallies = election.getTallies();
+		ElectoralTally electoralVotes = election.getElectoralVotes();
+		MyIterator<String> statesIter = electoralVotes.statesIterator();
+		while (statesIter.hasNext()){
+			String currentState = statesIter.next();
+			String stateWinner = tallies.winnerOf(currentState);
+			if (totals.candidateExists(stateWinner)){
+				int stateElectoralVotes = electoralVotes.lookupCount(currentState);
+				totals.addCandidateVotes(stateWinner, stateElectoralVotes);
+			}
+		}
+		return totals;
 	}
 }
