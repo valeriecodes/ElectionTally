@@ -36,7 +36,6 @@ public class Election {
 		} catch (IOException e) {
 			System.err.print("There was an I/O exception");
 			System.exit(1);
-			
 		}
 		electoralVotes = new ElectoralTally(electoralVotesMap, stateCount);
 		stateTallies = new TallySet();

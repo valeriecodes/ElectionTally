@@ -19,6 +19,4 @@ public class ElectionCenter {
 	public void addElection(String electionName, Election myElection){
 		elections.put(electionName, myElection);
 	}
-	
-	
 }

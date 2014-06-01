@@ -1,20 +1,29 @@
 import java.util.HashMap;
 
 public class TallySet {
-	private HashMap<String, Tally> tallies;
-	public TallySet(HashMap<String, Tally> myTallies){
+	private HashMap<String, CandidateTally> tallies;
+	private int tallyCount;
+	
+	public TallySet(HashMap<String, CandidateTally> myTallies, int myCount){
 		tallies = myTallies;
+		tallyCount = myCount;
 	}
 	
 	public TallySet(){
-		tallies = new HashMap<String, Tally>();
+		tallies = new HashMap<String, CandidateTally>();
+		tallyCount = 0;
 	}
 	
-	public TallySet(int size){
-		tallies = new HashMap<String, Tally>(size);
+	public void addTally(CandidateTally toAdd, String state){
+		tallies.put(state, toAdd);
+		tallyCount ++;
 	}
 	
-	public Tally tallyFor(String stateName){
+	public int getTallyCount(){
+		return tallyCount;
+	}
+	
+	public CandidateTally tallyFor(String stateName){
 		return tallies.get(stateName);
 	}
 	
