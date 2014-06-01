@@ -73,7 +73,7 @@ public class BallotMaker {
 				ArrayList<String> candidates = options.get(election);
 				String candidate = candidates.get(r.nextInt(candidates.size()));
 				Ballot myBallot = new Ballot(candidate, election, state);
-				PrintWriter fileWriter = new PrintWriter("data/input/" + state + "-" + j + ".csv");
+				PrintWriter fileWriter = new PrintWriter("data/inbox/" + state + "-" + j + ".csv");
 				fileWriter.print(myBallot.toCSV());
 				fileWriter.close();
 			}
