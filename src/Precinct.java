@@ -4,7 +4,6 @@ import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
-import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -24,7 +23,7 @@ public class Precinct {
 				JmsComponent.jmsComponentAutoAcknowledge(connectionFactory));
 		context.addRoutes(new RouteBuilder() {
 			public void configure () throws Exception{
-				from("jms:queue:BALLOTS_" + state)
+				from("jms:queue:BALLOTS_CA")
 					.log("Counting ballot")
 					.aggregate(header("Election"), new MyAggregationStrategy())
 						.completionSize(20)
@@ -32,5 +31,10 @@ public class Precinct {
 					.to("jms:queue:ELECTION_CENTER");
 			}
 		});
+		
+		context.start();
+		Thread.sleep(1000);
+
+		context.stop();
 	}
 }
