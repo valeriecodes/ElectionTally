@@ -11,12 +11,7 @@ public class ElectoralTally extends Tally{
 		while(votesIter.hasNext()){
 			totalVotes += votesIter.next();
 		}
-		float halfVotes = (float) totalVotes/2;
-		if (halfVotes % 1 == 0){
-			threshold = (int) halfVotes;
-		} else {
-			threshold = (int) halfVotes + 1;
-		}
+		threshold = 1 + totalVotes/2;
 	}
 	
 	public int getTotalVotes(){

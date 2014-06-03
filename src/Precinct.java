@@ -28,13 +28,13 @@ public class Precinct {
 					.setHeader("State", constant(state))
 					.aggregate(header("Election"), new MyAggregationStrategy())
 						.completionSize(20)
-						.completionTimeout(500)
+						.completionTimeout(1000)
 					.to("jms:queue:ELECTION_CENTER");
 			}
 		});
 		
 		context.start();
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 
 		context.stop();
 	}
