@@ -3,7 +3,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class ElectoralVoteEngine implements WinnerStrategy{
-	int threshold;
 	ElectoralTally electoralVotes;
 	CandidateTally totals;
 	Election election;
@@ -45,11 +44,31 @@ public class ElectoralVoteEngine implements WinnerStrategy{
 		while (statesIter.hasNext()){
 			String currentState = statesIter.next();
 			String stateWinner = tallies.winnerOf(currentState);
+			int stateElectoralVotes = electoralVotes.lookupCount(currentState);
 			if (totals.candidateExists(stateWinner)){
-				int stateElectoralVotes = electoralVotes.lookupCount(currentState);
 				totals.addCandidateVotes(stateWinner, stateElectoralVotes);
+			} else {
+				totals.addCandidate(stateWinner, stateElectoralVotes);
 			}
 		}
 		return totals;
+	}
+	
+	public void printResults(){
+		String winner = this.pickWinner();
+		int votes = totals.lookupCount(winner);
+		System.out.format("The winner is " + winner + " with %d electoral votes", votes);
+		System.out.println();
+		Iterator<String> candidatesIter = totals.candidatesIterator();
+		while(candidatesIter.hasNext()){
+			String candidate = candidatesIter.next();
+			if(candidate != winner){
+				votes = totals.lookupCount(candidate);
+				System.out.format(candidate + " got %d electoral votes", votes);
+				System.out.println();
+			}
+		}
+		System.out.println("Total electoral votes: " + electoralVotes.getTotalVotes());
+		System.out.println("Electoral votes needed to win election: " + electoralVotes.getThreshold());
 	}
 }

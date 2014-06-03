@@ -1,3 +1,11 @@
+To run, import into Eclipse and run MyMain.java. You will also need to run active MQ on port 62060.
+It takes a little while to populate and process the queues, so feel free to make 
+yourself some tea while it does its work or continually refresh http://localhost:8260/admin/queues.jsp.
+
+Note that because the assignment didn't call for parallel processing I did not implement it, but that the
+different steps of the processing are designed in such a way that they could be run in parallel.
+
+For my project, I implemented an election system. 
 http://stackoverflow.com/questions/2885173/java-how-to-create-and-write-to-a-file
 http://docs.oracle.com/
 http://stackoverflow.com/questions/13706466/how-do-i-tell-if-an-empty-line-has-been-read-in-with-a-bufferedreader

@@ -54,20 +54,23 @@ public class PopularVoteEngine implements WinnerStrategy {
 	}
 	
 	public void printResults(){
-		CandidateTally voteBreakdown = this.voteBreakdown();
+		String winner = this.pickWinner();
 		int totalVotes = 0;
 		Iterator<Integer> votesIter = totals.totalsIterator();
 		while(votesIter.hasNext()){
 			totalVotes += votesIter.next();
 		}
-		String winner = this.pickWinner();
 		float percent = ((float) totals.lookupCount(winner)/totalVotes) * 100;
 		System.out.format("The winner is " + winner + " with %.2f percent of the vote", percent);
+		System.out.println();
 		Iterator<String> candidatesIter = totals.candidatesIterator();
 		while(candidatesIter.hasNext()){
 			String candidate = candidatesIter.next();
-			percent = ((float) totals.lookupCount(candidate)/totalVotes) * 100;
-			System.out.format(candidate + " got %.2f percent of the vote", percent);
+			if(candidate != winner){
+				percent = ((float) totals.lookupCount(candidate)/totalVotes) * 100;
+				System.out.format(candidate + " got %.2f percent of the vote", percent);
+				System.out.println();
+			}
 		}
 		System.out.println("Total votes cast: " + totalVotes);
 	}

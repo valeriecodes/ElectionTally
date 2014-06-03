@@ -110,18 +110,16 @@ public class ElectionCenter {
 			String[] voteCounts = content.split(",");
 			Election currentElection = elections.get(currentElectionName);
 			for(int i = 0; i < voteCounts.length; i++){
-				System.out.println(elections.containsKey(currentElectionName));
-				System.out.println(content);
 				String [] voteInfo = voteCounts[i].split(":");
 				String candidate = voteInfo[0];
 				int votes = Integer.parseInt(voteInfo[1]);
-				System.out.println("Election: " + currentElectionName);
-				System.out.println("State: " + state);
-				System.out.println("Candiate: " + candidate);
-				System.out.println("Votes: " + votes);
 				currentElection.addVotes(state, candidate, votes);
 			}
 		}
+	}
+	
+	public Election getElection(String electionName){
+		return elections.get(electionName);
 	}
 	
 	public void summarizeResults(){
@@ -134,6 +132,10 @@ public class ElectionCenter {
 			ElectoralVoteEngine electVotes = new ElectoralVoteEngine(currentElection);
 			System.out.println("Popular vote:");
 			popVotes.printResults();
+			System.out.println();
+			System.out.println("Electoral vote:");
+			electVotes.printResults();
+			System.out.println();
 		}
 	}
 }

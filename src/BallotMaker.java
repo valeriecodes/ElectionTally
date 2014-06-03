@@ -88,10 +88,6 @@ public class BallotMaker {
 				template.sendBodyAndHeader("jms:queue:BALLOTS_" + state, candidate, "Election", election);
 			}
 		}
-		context.start();
-		Thread.sleep(1000);
-
-		context.stop();
 	}
 	
 	public String[] getElections(){
