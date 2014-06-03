@@ -1,8 +1,8 @@
-2000 Presidential
+2000Presidential
 Bush 1
 Gore 1
 
-2012 Presidential
+2012Presidential
 Romney 47
 Obama 50
 Paul 3

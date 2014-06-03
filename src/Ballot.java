@@ -1,15 +1,15 @@
+import org.apache.camel.dataformat.bindy.annotation.*;
 
+@CsvRecord(separator = ",", crlf = "UNIX")
 public class Ballot {
-	String candidateName;
-	String electionName;
-	String stateName;
-	public Ballot(String myCandidate, String myElection, String myState){
-		candidateName = myCandidate;
-		electionName = myElection;
-		stateName = myState;
-	}
+	@DataField(pos = 1)
+	String candidate;
 	
-	public String toCSV(){
-		return stateName + "," + electionName + "," + candidateName; 
+	@DataField(pos=2)
+	String election;
+	
+	public Ballot(String myCandidate, String myElection){
+		candidate = myCandidate;
+		election = myElection;
 	}
 }

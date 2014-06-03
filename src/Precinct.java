@@ -16,16 +16,21 @@ public class Precinct {
 		state = myState;
 	}
 	
-	public void countVotes(){
+	public void countVotes() throws Exception{
 		CamelContext context = new DefaultCamelContext();
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
 				"tcp://localhost:62060");
 		context.addComponent("jms",
 				JmsComponent.jmsComponentAutoAcknowledge(connectionFactory));
-		ConsumerTemplate consumer = context.createConsumerTemplate();
-		while(true){
-			String vote = consumer.receiveBody("jms:queue:BALLOTS_" + state, String.class);
-			vote.split(",");
-		}
+		context.addRoutes(new RouteBuilder() {
+			public void configure () throws Exception{
+				from("jms:queue:BALLOTS_" + state)
+					.log("Counting ballot")
+					.aggregate(header("Election"), new MyAggregationStrategy())
+						.completionSize(20)
+					.completionTimeout(3000)
+					.to("jms:queue:ELECTION_CENTER");
+			}
+		});
 	}
 }

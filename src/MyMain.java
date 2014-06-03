@@ -1,7 +1,7 @@
 public class MyMain {
 	public static void main(String[] args) throws Exception {
-		BallotMaker myBallotMaker = new BallotMaker("voteBreakdown.txt", "states.txt");
-		myBallotMaker.routeVotes();
+		BallotMaker myBallotMaker = new BallotMaker("voteBreakdown.txt");
+		myBallotMaker.addState("CA");
 		myBallotMaker.routeVotes();
 	}
 }
