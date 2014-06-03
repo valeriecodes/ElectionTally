@@ -7,5 +7,6 @@ public class MyMain {
 		center.castVotes();
 		center.countVotes();
 		center.distributeVotes();
+		center.summarizeResults();
 	}
 }

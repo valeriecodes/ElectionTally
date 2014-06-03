@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class ElectoralTally extends Tally{
 	private int totalVotes;
@@ -6,7 +7,7 @@ public class ElectoralTally extends Tally{
 	public ElectoralTally(HashMap<String, Integer> myCounts, int ItemCount){
 		super(myCounts, ItemCount);
 		totalVotes = 0;
-		MyIterator<Integer> votesIter = this.totalsIterator();
+		Iterator<Integer> votesIter = this.totalsIterator();
 		while(votesIter.hasNext()){
 			totalVotes += votesIter.next();
 		}
@@ -26,7 +27,7 @@ public class ElectoralTally extends Tally{
 		return threshold;
 	}
 	
-	public MyIterator<String> statesIterator(){
+	public Iterator<String> statesIterator(){
 		return this.keysIterator();
 	}
 }

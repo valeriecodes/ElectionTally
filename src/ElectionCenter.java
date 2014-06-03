@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.jms.ConnectionFactory;
 
@@ -122,5 +124,16 @@ public class ElectionCenter {
 		}
 	}
 	
-	
+	public void summarizeResults(){
+		Iterator<Map.Entry<String, Election>> iter = elections.entrySet().iterator();
+		while(iter.hasNext()){
+			Map.Entry<String, Election> currentEntry = iter.next();
+			System.out.println("Results of the " + currentEntry.getKey() + " Election");
+			Election currentElection = currentEntry.getValue();
+			PopularVoteEngine popVotes = new PopularVoteEngine(currentElection);
+			ElectoralVoteEngine electVotes = new ElectoralVoteEngine(currentElection);
+			System.out.println("Popular vote:");
+			popVotes.printResults();
+		}
+	}
 }

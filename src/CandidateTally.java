@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class CandidateTally extends Tally implements WinnerStrategy{
@@ -24,7 +25,7 @@ public class CandidateTally extends Tally implements WinnerStrategy{
 		counts.put(candidate, previousCount + voteCount);
 	}
 	
-	public MyIterator<String> candidatesIterator(){
+	public Iterator<String> candidatesIterator(){
 		return super.keysIterator();
 	}
 	
@@ -35,7 +36,7 @@ public class CandidateTally extends Tally implements WinnerStrategy{
 	public String pickWinner(){
 		String currentWinner =  null;
 		int currentWinnerVotes = 0;
-		MyIterator<Map.Entry<String, Integer>> iter = this.iterator(); 
+		Iterator<Map.Entry<String, Integer>> iter = this.iterator(); 
 		while(iter.hasNext()){
 			Map.Entry<String, Integer> currentCandidate = iter.next();
 			int currentVotes = currentCandidate.getValue();

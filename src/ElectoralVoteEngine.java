@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,7 +19,7 @@ public class ElectoralVoteEngine implements WinnerStrategy{
 			this.voteBreakdown();
 		}
 		String winner = null;
-		MyIterator<Entry<String, Integer>> iter = totals.iterator();
+		Iterator<Entry<String, Integer>> iter = totals.iterator();
 		boolean toContinue = iter.hasNext();
 		while(toContinue){
 			Map.Entry<String, Integer> candidateInfo = iter.next();
@@ -40,7 +41,7 @@ public class ElectoralVoteEngine implements WinnerStrategy{
 		}
 		TallySet tallies = election.getTallies();
 		ElectoralTally electoralVotes = election.getElectoralVotes();
-		MyIterator<String> statesIter = electoralVotes.statesIterator();
+		Iterator<String> statesIter = electoralVotes.statesIterator();
 		while (statesIter.hasNext()){
 			String currentState = statesIter.next();
 			String stateWinner = tallies.winnerOf(currentState);

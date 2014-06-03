@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 abstract class Tally {
@@ -10,22 +11,16 @@ abstract class Tally {
 		numElements = myItemCount;
 	}
 	
-	public MyIterator<Map.Entry<String, Integer>> iterator(){
-		@SuppressWarnings("unchecked")
-		Map.Entry<String, Integer> [] contents = (Map.Entry<String, Integer>[]) counts.entrySet().toArray();
-		return new MyIterator<Map.Entry<String, Integer>>(contents);
+	public Iterator<Map.Entry<String, Integer>> iterator(){
+		return counts.entrySet().iterator();
 	}
 	
-	public MyIterator<Integer> totalsIterator(){
-		Integer [] items = counts.values()
-				.toArray(new Integer[counts.size()]);
-		return new MyIterator<Integer>(items);
+	public Iterator<Integer> totalsIterator(){
+		return counts.values().iterator();
 	}
 	
-	public MyIterator<String> keysIterator(){
-		String [] keys = counts.keySet()
-				.toArray(new String[counts.size()]);
-		return new MyIterator<String>(keys);
+	public Iterator<String> keysIterator(){
+		return counts.keySet().iterator();
 	}
 	
 	public int lookupCount(String toLookup){

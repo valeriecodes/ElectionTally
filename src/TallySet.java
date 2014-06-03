@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class TallySet {
 	private HashMap<String, CandidateTally> tallies;
@@ -31,8 +32,7 @@ public class TallySet {
 		return tallyFor(stateName).pickWinner();
 	}
 	
-	public MyIterator<Tally> iterator(){
-		return new MyIterator<Tally>(tallies.values()
-				.toArray(new Tally [tallies.size()]));
+	public Iterator<CandidateTally> iterator(){
+		return tallies.values().iterator();
 	}
 }
