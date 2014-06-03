@@ -17,10 +17,13 @@ import org.apache.camel.impl.DefaultCamelContext;
 public class BallotMaker {
 	HashMap<String, ArrayList<String>> options;
 	ArrayList<String> states;
+	ElectionCenter center;
 
 	public BallotMaker(String votesFile) {
 		options = new HashMap<String, ArrayList<String>>();
 		states = new ArrayList<String>();
+		center = ElectionCenter.getElectionCenter();
+		
 		BufferedReader fileStream = null;
 		try {
 			fileStream = new BufferedReader(new FileReader(votesFile));
@@ -32,12 +35,9 @@ public class BallotMaker {
 		try {
 			while ((line = fileStream.readLine()) != null) {
 				String electionName = line;
-				System.out.println(line);
 				ArrayList<String> weightedCandidates = new ArrayList<String>();
 				while ((line = fileStream.readLine()) != null && !line.equals("")) {
 					String[] info = line.split(" ");
-					System.out.println("info[0]: " + info[0]);
-					System.out.println("info[1]: " + info[1]);
 					int occurences = Integer.valueOf(info[1]);
 					for (int i = 0; i < occurences; i++) {
 						weightedCandidates.add(info[0]);
@@ -58,7 +58,16 @@ public class BallotMaker {
 		states.add(state);
 	}
 	
-	public void routeVotes() throws Exception {
+	public ArrayList<String> getStates(){
+		return states;
+	}
+	
+	public void addElection(String electionName){
+		options.put(electionName, new ArrayList<String>());
+		center.addElection(electionName);
+	}
+	
+	public void castVotes() throws Exception {
 		CamelContext context = new DefaultCamelContext();
 		ProducerTemplate template = context.createProducerTemplate();
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(

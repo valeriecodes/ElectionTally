@@ -7,12 +7,14 @@ import java.util.HashMap;
 public class Election {
 	private TallySet stateTallies;
 	private ElectoralTally electoralVotes;
+	private ElectionCenter center;
 	
 	public Election(){
 		stateTallies = new TallySet();
+		center = ElectionCenter.getElectionCenter();
 	}
 	
-	public Election(String voteFile){
+	public void setElectoralVotes(String voteFile){
 		HashMap<String, Integer> electoralVotesMap = new HashMap<String, Integer>();
 		int stateCount = 0;
 		BufferedReader fileStream = null;
@@ -27,6 +29,8 @@ public class Election {
 			while((line = fileStream.readLine()) != null){
 				String[] info = line.split(" ");
 				electoralVotesMap.put(info[0], Integer.valueOf(info[1]));
+				center.addState(info[0]);
+				stateTallies.addTally(info[0]);
 				stateCount += 1;
 			}
 			fileStream.close();
@@ -38,7 +42,11 @@ public class Election {
 			System.exit(1);
 		}
 		electoralVotes = new ElectoralTally(electoralVotesMap, stateCount);
-		stateTallies = new TallySet();
+	}
+	
+	public void addVotes(String state, String candidate, int votes){
+		CandidateTally currentTally = stateTallies.tallyFor(state);
+		currentTally.addCandidateVotes(candidate, votes);
 	}
 	
 	public TallySet getTallies(){

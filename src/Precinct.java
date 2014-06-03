@@ -10,7 +10,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 
 public class Precinct {
 	String state;
-	HashMap<String, CandidateTally> results;
+	
 	public Precinct(String myState){
 		state = myState;
 	}
@@ -23,8 +23,8 @@ public class Precinct {
 				JmsComponent.jmsComponentAutoAcknowledge(connectionFactory));
 		context.addRoutes(new RouteBuilder() {
 			public void configure () throws Exception{
-				from("jms:queue:BALLOTS_CA")
-					.log("Counting ballot")
+				from("jms:queue:BALLOTS_" + state)
+					.log("Counting ballots from " + state)
 					.setHeader("State", constant(state))
 					.aggregate(header("Election"), new MyAggregationStrategy())
 						.completionSize(20)

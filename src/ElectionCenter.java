@@ -1,9 +1,14 @@
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ConsumerTemplate;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -11,50 +16,104 @@ import org.apache.camel.impl.DefaultCamelContext;
 public class ElectionCenter {
 	private static ElectionCenter instance = null;
 	private HashMap<String,Election> elections;
+	private HashMap<String, Precinct> precincts;
 	private BallotMaker ballotMaker;
 	
-	private ElectionCenter(){}
+	private ElectionCenter(){
+		elections = new HashMap<String, Election>();
+		precincts = new HashMap<String, Precinct>();
+		ballotMaker = null;
+	}
+	
+	public void reset(){
+		elections = new HashMap<String, Election>();
+		precincts = new HashMap<String, Precinct>();
+		ballotMaker = null;
+	}
 	
 	public static ElectionCenter getElectionCenter() {
 		if (instance == null) {
 			instance = new ElectionCenter();
 		}
-		else {
-			System.err.print("Sorry, an election center instance already exists.\n");
-		}
 		return instance;
 	}
 	
-	public void castVotes(String voteFile){
+	public void addElection(String electionName){
+		if (!elections.containsKey(electionName)){
+			elections.put(electionName, new Election());
+		}
+	}
+	
+	public void setElectoralVotes(String fileName, String electionName){
+		Election election = elections.get(electionName);
+		election.setElectoralVotes(fileName);
+	}
+	
+	public void setElectoralVotes(String voteFile){
+		Collection<Election> vals = elections.values();
+		Iterator<Election> iter = vals.iterator();
+		while(iter.hasNext()){
+			Election currentElection = iter.next();
+			currentElection.setElectoralVotes(voteFile);
+		}
+	}
+	
+	public void addState(String state){
+		ArrayList<String> ballotStates = ballotMaker.getStates();
+		if(!ballotStates.contains(state)){
+			ballotMaker.addState(state);
+		}
+		if(!precincts.containsKey(state)){
+			precincts.put(state, new Precinct(state));
+		}
+	}
+	
+	public void setupBallotMaker(String voteFile){
 		ballotMaker = new BallotMaker(voteFile);
 		String[] possibleElections = ballotMaker.getElections();
 		for(int i = 0; i < possibleElections.length; i++){
 			if(!elections.containsKey(possibleElections[i])){
-				this.addElection(possibleElections[i], new Election());
+				this.addElection(possibleElections[i]);
 			}
+		}
+	}
+	
+	public void castVotes() throws Exception{
+		ballotMaker.castVotes();
+	}
+	
+	public void countVotes() throws Exception{
+		Collection<Precinct> vals = precincts.values();
+		Iterator<Precinct> iter = vals.iterator();
+		while(iter.hasNext()){
+			Precinct currentPrecinct = iter.next();
+			currentPrecinct.countVotes();
 		}
 	}
 	
 	public void distributeVotes() throws Exception{
 		CamelContext context = new DefaultCamelContext();
+		ConsumerTemplate consumer = context.createConsumerTemplate();
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
 				"tcp://localhost:62060");
 		context.addComponent("jms",
 				JmsComponent.jmsComponentAutoAcknowledge(connectionFactory));
-		context.addRoutes(new RouteBuilder() {
-			public void configure () throws Exception{
-				from("jms:queue:ELECTION_CENTER")
-					.to("jms:queue:" + header("Election"));
+		while(true){
+			Exchange msg = consumer.receive("jms:queue:ELECTION_CENTER", 3000);
+			if(msg == null){
+				break;
 			}
-		});
-		
-		context.start();
-		Thread.sleep(1000);
-
-		context.stop();
-	}
-
-	public void addElection(String electionName, Election myElection){
-		elections.put(electionName, myElection);
+			String currentElectionName = msg.getIn().getHeader("Election", String.class);
+			String state = msg.getIn().getHeader("State", String.class);
+			String content = msg.getIn().getBody(String.class);
+			String[] voteCounts = content.split(",");
+			Election currentElection = elections.get(currentElectionName);
+			for(int i = 0; i < voteCounts.length; i++){
+				String [] voteInfo = voteCounts[i].split(":");
+				String candidate = voteInfo[0];
+				int votes = Integer.parseInt(voteInfo[1]);
+				currentElection.addVotes(state, candidate, votes);
+			}
+		}
 	}
 }

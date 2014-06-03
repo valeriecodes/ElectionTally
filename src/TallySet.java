@@ -14,8 +14,8 @@ public class TallySet {
 		tallyCount = 0;
 	}
 	
-	public void addTally(CandidateTally toAdd, String state){
-		tallies.put(state, toAdd);
+	public void addTally(String tallyName){
+		tallies.put(tallyName, new CandidateTally());
 		tallyCount ++;
 	}
 	

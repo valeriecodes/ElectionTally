@@ -7,13 +7,11 @@ public class MyAggregationStrategy implements AggregationStrategy {
 	@Override
 	public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
 		String newBody = newExchange.getIn().getBody(String.class);
-		System.out.println("New body: " + newBody);
 		String joinedBody;
 		if (oldExchange == null){
 			joinedBody = newBody + ":1";
 		} else {
 			String oldBody = oldExchange.getIn().getBody(String.class);
-			System.out.println("Old body: " + oldBody);
 			boolean inBody = false;
 			String[] candidates;
 			if (oldBody.contains(",")){
@@ -36,7 +34,6 @@ public class MyAggregationStrategy implements AggregationStrategy {
 				joinedBody = joinedBody + "," + newBody + ":1";
 			}
 		}
-		System.out.println(joinedBody);
 		newExchange.getIn().setBody(joinedBody);
 		return newExchange;
 	}

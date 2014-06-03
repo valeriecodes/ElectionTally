@@ -1,6 +1,10 @@
 public class MyMain {
 	public static void main(String[] args) throws Exception {
-		Election myElection = new Election("ElectoralVotes.txt");
-		System.out.print(myElection.getElectoralVotes().lookupCount("CA"));
+		ElectionCenter center = ElectionCenter.getElectionCenter();
+		//center.setupBallotMaker("voteBreakdown.txt");
+		//center.setElectoralVotes("ElectoralVotes.txt");
+		//center.castVotes();
+		//center.countVotes();
+		center.distributeVotes();
 	}
 }
