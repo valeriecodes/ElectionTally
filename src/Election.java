@@ -46,7 +46,11 @@ public class Election {
 	
 	public void addVotes(String state, String candidate, int votes){
 		CandidateTally currentTally = stateTallies.tallyFor(state);
-		currentTally.addCandidateVotes(candidate, votes);
+		if(currentTally.candidateExists(candidate)){
+			currentTally.addCandidateVotes(candidate, votes);
+		} else{
+			currentTally.addCandidate(candidate, votes);
+		}
 	}
 	
 	public TallySet getTallies(){

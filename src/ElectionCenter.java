@@ -9,7 +9,6 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 
@@ -109,11 +108,19 @@ public class ElectionCenter {
 			String[] voteCounts = content.split(",");
 			Election currentElection = elections.get(currentElectionName);
 			for(int i = 0; i < voteCounts.length; i++){
+				System.out.println(elections.containsKey(currentElectionName));
+				System.out.println(content);
 				String [] voteInfo = voteCounts[i].split(":");
 				String candidate = voteInfo[0];
 				int votes = Integer.parseInt(voteInfo[1]);
+				System.out.println("Election: " + currentElectionName);
+				System.out.println("State: " + state);
+				System.out.println("Candiate: " + candidate);
+				System.out.println("Votes: " + votes);
 				currentElection.addVotes(state, candidate, votes);
 			}
 		}
 	}
+	
+	
 }
