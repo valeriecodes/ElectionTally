@@ -1,9 +1,6 @@
 public class MyMain {
 	public static void main(String[] args) throws Exception {
-		BallotMaker myBallotMaker = new BallotMaker("voteBreakdown.txt");
-		myBallotMaker.addState("CA");
-		myBallotMaker.routeVotes();
-		Precinct myPrecinct = new Precinct("CA");
-		myPrecinct.countVotes();
+		Election myElection = new Election("ElectoralVotes.txt");
+		System.out.print(myElection.getElectoralVotes().lookupCount("CA"));
 	}
 }

@@ -2,11 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -15,10 +11,8 @@ import javax.jms.ConnectionFactory;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.dataformat.BindyType;
 
 public class BallotMaker {
 	HashMap<String, ArrayList<String>> options;
@@ -89,5 +83,9 @@ public class BallotMaker {
 		Thread.sleep(1000);
 
 		context.stop();
+	}
+	
+	public String[] getElections(){
+		return options.keySet().toArray(new String [options.size()]);
 	}
 }

@@ -25,6 +25,7 @@ public class Precinct {
 			public void configure () throws Exception{
 				from("jms:queue:BALLOTS_CA")
 					.log("Counting ballot")
+					.setHeader("State", constant(state))
 					.aggregate(header("Election"), new MyAggregationStrategy())
 						.completionSize(20)
 					.completionTimeout(3000)
