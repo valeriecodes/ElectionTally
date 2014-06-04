@@ -29,7 +29,7 @@ public class PopularVoteEngine implements WinnerStrategy {
 		return winner;
 	}
 	
-	public CandidateTally voteBreakdown(){
+	public void voteBreakdown(){
 		if(totals != null){
 			totals.reset();
 		} else {
@@ -50,7 +50,6 @@ public class PopularVoteEngine implements WinnerStrategy {
 				}
 			}
 		}
-		return totals;
 	}
 	
 	public void printResults(){

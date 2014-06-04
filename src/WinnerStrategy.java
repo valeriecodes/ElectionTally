@@ -1,7 +1,8 @@
-
 public interface WinnerStrategy {
 	
 	public String pickWinner();
 	
-	public CandidateTally voteBreakdown();
+	public void voteBreakdown();
+	
+	public void printResults();
 }

@@ -2,10 +2,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class ElectoralVoteEngine extends PrinterTemplate, implements WinnerStrategy{
+
+public class ElectoralVoteEngine implements WinnerStrategy{
 	ElectoralTally electoralVotes;
-	CandidateTally totals;
 	Election election;
+	CandidateTally totals;
+	int totalVotes;
 	
 	public ElectoralVoteEngine(Election myElection){
 		election = myElection;
@@ -32,7 +34,7 @@ public class ElectoralVoteEngine extends PrinterTemplate, implements WinnerStrat
 		return winner;
 	}
 	
-	public CandidateTally voteBreakdown(){
+	public void voteBreakdown(){
 		if(totals != null){
 			totals.reset();
 		} else {
@@ -51,10 +53,9 @@ public class ElectoralVoteEngine extends PrinterTemplate, implements WinnerStrat
 				totals.addCandidate(stateWinner, stateElectoralVotes);
 			}
 		}
-		return totals;
 	}
 	
-	/*public void printResults(this.pickWinner(),totals){
+	public void printResults(){
 		String winner = this.pickWinner();
 		int votes = totals.lookupCount(winner);
 		System.out.format("The winner is " + winner + " with %d electoral votes", votes);
@@ -70,27 +71,8 @@ public class ElectoralVoteEngine extends PrinterTemplate, implements WinnerStrat
 		}
 		System.out.println("Total electoral votes: " + electoralVotes.getTotalVotes());
 		System.out.println("Electoral votes needed to win election: " + electoralVotes.getThreshold());
-	}*/
-
-	@Override
-	protected void enumerateResults(String winner) {
-		int votes = totals.lookupCount(winner);
-		System.out.format(" with %d electoral votes", votes);
-		System.out.println();
-		Iterator<String> candidatesIter = totals.candidatesIterator();
-		while(candidatesIter.hasNext()){
-			String candidate = candidatesIter.next();
-			if(candidate != winner){
-				votes = totals.lookupCount(candidate);
-				System.out.format(candidate + " got %d electoral votes", votes);
-				System.out.println();
-			}
-		}
 	}
 
-	@Override
-	protected void finalSummary() {
-		System.out.println("Total electoral votes: " + electoralVotes.getTotalVotes());
-		System.out.println("Electoral votes needed to win election: " + electoralVotes.getThreshold());
-	}
+
+	
 }

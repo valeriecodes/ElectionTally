@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class CandidateTally extends Tally implements WinnerStrategy{
+public class CandidateTally extends Tally{
 	public CandidateTally(){
 		super(new HashMap<String, Integer>(), 0);
 	}
@@ -46,9 +46,5 @@ public class CandidateTally extends Tally implements WinnerStrategy{
 			}
 		}
 		return currentWinner;
-	}
-	
-	public CandidateTally voteBreakdown(){
-		return this;
 	}
 }
