@@ -4,5 +4,7 @@ public interface WinnerStrategy {
 	
 	public void voteBreakdown();
 	
-	public void printResults();
+	public void enumerateResults(String winner);
+	
+	public void finalSummary();
 }

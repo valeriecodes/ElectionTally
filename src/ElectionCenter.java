@@ -131,10 +131,10 @@ public class ElectionCenter {
 			VoteEngine popVotes = new VoteEngine(new PopularVoteStrategy(currentElection));
 			VoteEngine electVotes = new VoteEngine(new ElectoralVoteStrategy(currentElection));
 			System.out.println("Popular vote:");
-			popVotes.printResults();
+			popVotes.print(popVotes.winner());
 			System.out.println();
 			System.out.println("Electoral vote:");
-			electVotes.printResults();
+			electVotes.print(electVotes.winner());
 			System.out.println();
 		}
 	}
