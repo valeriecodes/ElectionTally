@@ -128,8 +128,8 @@ public class ElectionCenter {
 			Map.Entry<String, Election> currentEntry = iter.next();
 			System.out.println("Results of the " + currentEntry.getKey() + " Election");
 			Election currentElection = currentEntry.getValue();
-			PopularVoteEngine popVotes = new PopularVoteEngine(currentElection);
-			ElectoralVoteEngine electVotes = new ElectoralVoteEngine(currentElection);
+			VoteEngine popVotes = new VoteEngine(new PopularVoteStrategy(currentElection));
+			VoteEngine electVotes = new VoteEngine(new ElectoralVoteStrategy(currentElection));
 			System.out.println("Popular vote:");
 			popVotes.printResults();
 			System.out.println();
