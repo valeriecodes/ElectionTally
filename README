@@ -1,18 +1,4 @@
-Valerie Woolard
-Final project
-
-To run, import into Eclipse and run MyMain.java. You will also need to run active MQ on port 62060.
-It takes a few minutes to populate and process the queues, so feel free to make 
-yourself some tea while it does its work or continually refresh http://localhost:8260/admin/queues.jsp.
-
-Note that because the assignment didn't call for parallel processing I did not implement it, but that the
-different steps of the processing are designed in such a way that they could be run in parallel, except 
-for the final calculation portion by the PopularVote and ElectoralVote strategies.
-
-For my project, I implemented an election system. It generates ballots, sends them to precincts, which 
-summarize them in batches and send them to the election center, where they are tallied. Once tallies are 
-finalized, the results are calculated by the PopularVoteEngine, the ElectoralVote engine, or both. 
-MyMain goes through all of these steps and prints out a summary of the election results.
+Project for OO Architecture class at UChicago.
 
 EIP Patterns used:
 	-Aggregator (Summarizing messages at the Precinct to send to the ElectionCenter, 
@@ -27,11 +13,3 @@ Design Patterns used:
 	-Strategy (WinnerStrategy.java for ElectoralVoteStrategy, PopularVoteStrategy)
 	-Iterator (used in many places, particularly in the engines)
 	-Template (PrinterTemplate.java, used to print final Election results)
-	
-Resources referenced (outside of provided class ones):
-http://www.oodesign.com/strategy-pattern.html
-http://camel.apache.org/documentation.html
-http://stackoverflow.com/questions/2885173/java-how-to-create-and-write-to-a-file
-http://docs.oracle.com/
-http://stackoverflow.com/questions/13706466/how-do-i-tell-if-an-empty-line-has-been-read-in-with-a-bufferedreader
-http://tmielke.blogspot.com/2009/01/using-camel-aggregator-correctly.html
